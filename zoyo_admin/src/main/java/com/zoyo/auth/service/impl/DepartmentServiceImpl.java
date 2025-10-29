@@ -128,7 +128,10 @@ public class DepartmentServiceImpl implements IDepartmentService {
             if (departmentDTO.getParentId().equals(department.getId())) {
                 throw new RuntimeException("父部门不能是自己");
             }
-            // TODO: 检查是否是子部门
+            // 检查是否是子部门（防止循环引用）
+            if (isDescendant(department.getId(), departmentDTO.getParentId())) {
+                throw new RuntimeException("父部门不能是自己的子部门");
+            }
             department.setParentId(departmentDTO.getParentId());
         }
         
@@ -238,6 +241,36 @@ public class DepartmentServiceImpl implements IDepartmentService {
         }
         
         return tree;
+    }
+    
+    /**
+     * 检查目标部门是否是当前部门的子孙部门
+     * @param currentDeptId 当前部门ID
+     * @param targetParentId 目标父部门ID
+     * @return true-是子孙部门，false-不是
+     */
+    private boolean isDescendant(Long currentDeptId, Long targetParentId) {
+        // 如果目标父部门是0（根部门），则不存在循环
+        if (targetParentId == 0) {
+            return false;
+        }
+        
+        // 获取所有子部门
+        List<Department> children = departmentRepository.findByParentIdAndDeletedFalseOrderBySortAsc(currentDeptId);
+        
+        // 遍历所有子部门
+        for (Department child : children) {
+            // 如果子部门ID等于目标父部门ID，说明目标是当前部门的子部门
+            if (child.getId().equals(targetParentId)) {
+                return true;
+            }
+            // 递归检查子部门的子部门
+            if (isDescendant(child.getId(), targetParentId)) {
+                return true;
+            }
+        }
+        
+        return false;
     }
     
     /**
