@@ -70,6 +70,15 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true
           // permission: 'system:permission' // 暂时移除权限检查
         }
+      },
+      {
+        path: 'system/login-log',
+        name: 'LoginLogManagement',
+        component: () => import('@/views/system/LoginLogManagement.vue'),
+        meta: { 
+          requiresAuth: true
+          // permission: 'system:loginlog' // 暂时移除权限检查
+        }
       }
     ]
   }

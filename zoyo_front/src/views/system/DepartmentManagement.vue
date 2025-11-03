@@ -14,15 +14,9 @@
           </el-button>
         </el-col>
         <el-col :span="1.5">
-          <el-button @click="handleExpandAll">
-            <el-icon><Expand /></el-icon>
-            展开全部
-          </el-button>
-        </el-col>
-        <el-col :span="1.5">
-          <el-button @click="handleCollapseAll">
+          <el-button @click="handleToggleExpandAll">
             <el-icon><Fold /></el-icon>
-            折叠全部
+            {{ expandAll ? '折叠全部' : '展开全部' }}
           </el-button>
         </el-col>
       </el-row>
@@ -31,6 +25,7 @@
     <!-- 部门树表格 -->
     <el-card class="table-card" shadow="never">
       <el-table
+        ref="tableRef"
         v-loading="loading"
         :data="departmentList"
         row-key="id"
@@ -170,7 +165,7 @@
 
 
 <script setup lang="ts">
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted, computed, nextTick } from 'vue'
 import { ElMessage, ElMessageBox, type FormInstance, type FormRules } from 'element-plus'
 import {
   getDepartmentTree,
@@ -189,6 +184,7 @@ const loading = ref(false)
 const departmentList = ref<DepartmentTreeVO[]>([])
 const expandAll = ref(true)
 const userList = ref<UserDetailVO[]>([])
+const tableRef = ref()
 
 // 对话框
 const dialogVisible = ref(false)
@@ -277,14 +273,24 @@ const loadUserList = async () => {
   }
 }
 
-// 展开全部
-const handleExpandAll = () => {
-  expandAll.value = true
+// 展开/折叠全部
+const handleToggleExpandAll = () => {
+  expandAll.value = !expandAll.value
+  nextTick(() => {
+    toggleRowExpansion(departmentList.value, expandAll.value)
+  })
 }
 
-// 折叠全部
-const handleCollapseAll = () => {
-  expandAll.value = false
+// 递归展开/折叠所有行
+const toggleRowExpansion = (data: DepartmentTreeVO[], isExpand: boolean) => {
+  data.forEach((item) => {
+    if (tableRef.value) {
+      tableRef.value.toggleRowExpansion(item, isExpand)
+    }
+    if (item.children && item.children.length > 0) {
+      toggleRowExpansion(item.children, isExpand)
+    }
+  })
 }
 
 // 新增

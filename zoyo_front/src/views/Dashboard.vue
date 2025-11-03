@@ -172,7 +172,7 @@
         <div class="chart-card table-card">
           <div class="card-header">
             <h3><el-icon><List /></el-icon> 最近登录记录</h3>
-            <el-button type="primary" link @click="$router.push('/system/user')">查看全部</el-button>
+            <el-button type="primary" link @click="$router.push('/system/login-log')">查看全部</el-button>
           </div>
           <el-table :data="recentLogins" style="width: 100%" :header-cell-style="{ background: '#1a1a2e', color: '#fff' }">
             <el-table-column prop="username" label="用户名" width="150" />

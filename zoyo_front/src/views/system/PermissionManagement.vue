@@ -19,6 +19,7 @@
     <!-- 权限树表格 -->
     <el-card class="table-card">
       <el-table
+        ref="tableRef"
         v-loading="loading"
         :data="permissionTree"
         row-key="id"
@@ -167,7 +168,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, nextTick } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
 import {
@@ -182,6 +183,7 @@ const permissionTree = ref<any[]>([])
 const permissionTreeOptions = ref<any[]>([])
 const loading = ref(false)
 const expandAll = ref(true)
+const tableRef = ref()
 
 // 对话框
 const dialogVisible = ref(false)
@@ -239,6 +241,21 @@ const loadPermissionTree = async () => {
 // 展开/折叠全部
 const handleExpandAll = () => {
   expandAll.value = !expandAll.value
+  nextTick(() => {
+    toggleRowExpansion(permissionTree.value, expandAll.value)
+  })
+}
+
+// 递归展开/折叠所有行
+const toggleRowExpansion = (data: any[], isExpand: boolean) => {
+  data.forEach((item) => {
+    if (tableRef.value) {
+      tableRef.value.toggleRowExpansion(item, isExpand)
+    }
+    if (item.children && item.children.length > 0) {
+      toggleRowExpansion(item.children, isExpand)
+    }
+  })
 }
 
 // 新增
