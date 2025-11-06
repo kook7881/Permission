@@ -98,7 +98,7 @@ public class UserManagementServiceImpl implements IUserManagementService {
             assignRoles(user.getId(), createDTO.getRoleIds());
         }
         
-        log.info("用户创建成功: {}", user.getUsername());
+        log.info("创建用户成功: {}", user.getUsername());
         return getUserDetail(user.getId());
     }
 
@@ -174,7 +174,6 @@ public class UserManagementServiceImpl implements IUserManagementService {
             assignRoles(user.getId(), updateDTO.getRoleIds());
         }
         
-        log.info("用户更新成功: {}", user.getUsername());
         return getUserDetail(user.getId());
     }
     
@@ -205,8 +204,6 @@ public class UserManagementServiceImpl implements IUserManagementService {
         user.setDeleteTime(LocalDateTime.now());
         user.setUpdateBy(getCurrentUserId());
         userRepository.save(user);
-        
-        log.info("用户删除成功: {}", id);
     }
     
     /**
@@ -220,8 +217,6 @@ public class UserManagementServiceImpl implements IUserManagementService {
         for (Long id : ids) {
             deleteUser(id);
         }
-        
-        log.info("批量删除用户成功，共删除{}个用户", ids.size());
     }
     
     /**
@@ -244,8 +239,6 @@ public class UserManagementServiceImpl implements IUserManagementService {
         user.setEnabled(status == 1);
         user.setUpdateBy(getCurrentUserId());
         userRepository.save(user);
-        
-        log.info("用户状态修改成功: {}", id);
     }
     
     /**
@@ -259,8 +252,6 @@ public class UserManagementServiceImpl implements IUserManagementService {
         for (Long id : ids) {
             updateUserStatus(id, status);
         }
-        
-        log.info("批量修改用户状态成功，共修改{}个用户", ids.size());
     }
 
     /**
@@ -268,8 +259,6 @@ public class UserManagementServiceImpl implements IUserManagementService {
      */
     @Override
     public Page<UserDetailVO> queryUsers(UserQueryDTO queryDTO) {
-        log.debug("分页查询用户列表: {}", queryDTO);
-        
         // 构建排序
         Sort sort = Sort.by(
             "desc".equalsIgnoreCase(queryDTO.getSortDirection()) 
@@ -304,8 +293,6 @@ public class UserManagementServiceImpl implements IUserManagementService {
      */
     @Override
     public UserDetailVO getUserDetail(Long id) {
-        log.debug("获取用户详细信息: {}", id);
-        
         User user = userRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new RuntimeException("用户不存在"));
         

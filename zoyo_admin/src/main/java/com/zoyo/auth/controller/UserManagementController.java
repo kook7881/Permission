@@ -1,5 +1,7 @@
 package com.zoyo.auth.controller;
 
+import com.zoyo.auth.annotation.Log;
+import com.zoyo.auth.common.OperationType;
 import com.zoyo.auth.common.Result;
 import com.zoyo.auth.dto.*;
 import com.zoyo.auth.service.IUserManagementService;
@@ -50,6 +52,7 @@ public class UserManagementController {
      */
     @PostMapping
     @PreAuthorize("hasAuthority('system:user:create')")
+    @Log(module = "用户管理", businessType = OperationType.INSERT, description = "创建用户")
     public Result<UserDetailVO> createUser(@Valid @RequestBody UserCreateDTO createDTO) {
         log.info("创建用户: {}", createDTO.getUsername());
         UserDetailVO user = userManagementService.createUser(createDTO);
@@ -61,6 +64,7 @@ public class UserManagementController {
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('system:user:update')")
+    @Log(module = "用户管理", businessType = OperationType.UPDATE, description = "更新用户信息")
     public Result<UserDetailVO> updateUser(
             @PathVariable Long id,
             @Valid @RequestBody UserUpdateDTO updateDTO) {
@@ -75,6 +79,7 @@ public class UserManagementController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('system:user:delete')")
+    @Log(module = "用户管理", businessType = OperationType.DELETE, description = "删除用户")
     public Result<Void> deleteUser(@PathVariable Long id) {
         log.info("删除用户: {}", id);
         userManagementService.deleteUser(id);
@@ -86,6 +91,7 @@ public class UserManagementController {
      */
     @DeleteMapping("/batch")
     @PreAuthorize("hasAuthority('system:user:delete')")
+    @Log(module = "用户管理", businessType = OperationType.DELETE, description = "批量删除用户")
     public Result<Void> batchDeleteUsers(@RequestBody List<Long> ids) {
         log.info("批量删除用户: {}", ids);
         userManagementService.batchDeleteUsers(ids);
@@ -97,6 +103,7 @@ public class UserManagementController {
      */
     @PutMapping("/{id}/status")
     @PreAuthorize("hasAuthority('system:user:update')")
+    @Log(module = "用户管理", businessType = OperationType.UPDATE, description = "修改用户状态")
     public Result<Void> updateUserStatus(
             @PathVariable Long id,
             @RequestParam Integer status) {
@@ -156,6 +163,7 @@ public class UserManagementController {
      */
     @PostMapping("/{id}/reset-password")
     @PreAuthorize("hasAuthority('system:user:reset-password')")
+    @Log(module = "用户管理", businessType = OperationType.UPDATE, description = "重置用户密码")
     public Result<Void> resetPassword(
             @PathVariable Long id,
             @RequestParam String newPassword) {
@@ -168,6 +176,7 @@ public class UserManagementController {
      * 修改密码（用户自己操作）
      */
     @PutMapping("/change-password")
+    @Log(module = "个人中心", businessType = OperationType.UPDATE, description = "修改个人密码")
     public Result<Void> changePassword(@Valid @RequestBody PasswordChangeDTO changeDTO) {
         log.info("用户修改密码");
         userManagementService.changePassword(changeDTO);
@@ -179,6 +188,7 @@ public class UserManagementController {
      */
     @PutMapping("/{id}/roles")
     @PreAuthorize("hasAuthority('system:user:role')")
+    @Log(module = "用户管理", businessType = OperationType.GRANT, description = "分配用户角色")
     public Result<Void> assignRoles(
             @PathVariable Long id,
             @RequestBody List<Long> roleIds) {

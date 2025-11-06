@@ -74,7 +74,11 @@
         <el-table-column prop="browser" label="浏览器" width="120" />
         <el-table-column prop="os" label="操作系统" width="120" />
         <el-table-column prop="deviceType" label="设备类型" width="100" align="center" />
-        <el-table-column prop="loginTime" label="登录时间" width="180" />
+        <el-table-column prop="loginTime" label="登录时间" width="180">
+          <template #default="{ row }">
+            {{ formatDateTime(row.loginTime) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="status" label="状态" width="100" align="center">
           <template #default="{ row }">
             <el-tag :type="row.status === 1 ? 'success' : 'danger'">
@@ -137,7 +141,7 @@
         <el-descriptions-item label="浏览器">{{ currentLog.browser || '-' }}</el-descriptions-item>
         <el-descriptions-item label="操作系统">{{ currentLog.os || '-' }}</el-descriptions-item>
         <el-descriptions-item label="设备类型">{{ currentLog.deviceType || '-' }}</el-descriptions-item>
-        <el-descriptions-item label="登录时间">{{ currentLog.loginTime }}</el-descriptions-item>
+        <el-descriptions-item label="登录时间">{{ formatDateTime(currentLog.loginTime) }}</el-descriptions-item>
         <el-descriptions-item label="状态">
           <el-tag :type="currentLog.status === 1 ? 'success' : 'danger'">
             {{ currentLog.status === 1 ? '成功' : '失败' }}
@@ -182,6 +186,23 @@ const selectedIds = ref<number[]>([])
 // 详情对话框
 const detailVisible = ref(false)
 const currentLog = ref<LoginLog | null>(null)
+
+// 格式化时间
+const formatDateTime = (dateTime: string | null | undefined) => {
+  if (!dateTime) return '-'
+  
+  // 如果是字符串，转换为Date对象
+  const date = typeof dateTime === 'string' ? new Date(dateTime) : dateTime
+  
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  const seconds = String(date.getSeconds()).padStart(2, '0')
+  
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`
+}
 
 // 加载数据
 const loadData = async () => {

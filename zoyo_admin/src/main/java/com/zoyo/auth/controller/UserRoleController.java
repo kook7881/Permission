@@ -25,7 +25,6 @@ public class UserRoleController {
      */
     @GetMapping("/{id}/roles")
     public Result<List<Role>> getUserRoles(@PathVariable Long id) {
-        log.info("获取用户角色: userId={}", id);
         List<Role> roles = userRoleService.getUserRoles(id);
         return Result.success(roles);
     }
@@ -35,7 +34,6 @@ public class UserRoleController {
      */
     @PostMapping("/{id}/roles")
     public Result<Void> assignRoles(@PathVariable Long id, @RequestBody List<Long> roleIds) {
-        log.info("为用户分配角色: userId={}, roleIds={}", id, roleIds);
         userRoleService.assignRoles(id, roleIds);
         return Result.success();
     }
@@ -45,7 +43,6 @@ public class UserRoleController {
      */
     @DeleteMapping("/{id}/role/{roleId}")
     public Result<Void> removeRole(@PathVariable Long id, @PathVariable Long roleId) {
-        log.info("移除用户角色: userId={}, roleId={}", id, roleId);
         userRoleService.removeRole(id, roleId);
         return Result.success();
     }

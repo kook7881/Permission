@@ -28,7 +28,6 @@ public class AuthController {
      */
     @PostMapping("/register")
     public Result<Void> register(@Valid @RequestBody RegisterRequest request) {
-        log.info("收到注册请求: {}", request.getUsername());
         authService.register(request);
         return Result.success("注册成功", null);
     }
@@ -39,7 +38,6 @@ public class AuthController {
     @PostMapping("/login")
     public Result<LoginResponse> login(@Valid @RequestBody LoginRequest request, 
                                       HttpServletRequest httpRequest) {
-        log.info("收到登录请求: {}", request.getUsername());
         LoginResponse response = authService.login(request, httpRequest);
         return Result.success("登录成功", response);
     }
@@ -49,7 +47,6 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public Result<Void> logout(HttpServletRequest httpRequest) {
-        log.info("用户登出");
         // 更新用户的最后退出时间
         authService.logout(httpRequest);
         return Result.success("登出成功", null);

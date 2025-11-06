@@ -124,12 +124,9 @@ const systemMenus = computed(() => {
   
   // 如果有菜单数据，从中查找系统管理菜单
   if (menus.length > 0) {
-    // 查找系统管理菜单（兼容 'system' 和 'system:manage' 两种权限码）
-    const systemMenu = menus.find(m => 
-      m.permissionCode === 'system' || 
-      m.permissionCode === 'system:manage' ||
-      m.routePath === '/system'
-    )
+    // 优先查找 system:manage，如果没有再查找 system
+    const systemMenu = menus.find(m => m.permissionCode === 'system:manage') ||
+                      menus.find(m => m.permissionCode === 'system' || m.routePath === '/system')
     
     if (systemMenu && systemMenu.children && systemMenu.children.length > 0) {
       return systemMenu.children
@@ -157,6 +154,8 @@ const breadcrumb = computed(() => {
     '/system/department': '部门管理',
     '/system/role': '角色管理',
     '/system/permission': '权限管理',
+    '/system/login-log': '登录日志',
+    '/system/operation-log': '操作日志',
     '/profile': '个人中心'
   }
   return map[route.path] || ''

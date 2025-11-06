@@ -1,5 +1,7 @@
 package com.zoyo.auth.controller;
 
+import com.zoyo.auth.annotation.Log;
+import com.zoyo.auth.common.OperationType;
 import com.zoyo.auth.common.Result;
 import com.zoyo.auth.dto.RoleDTO;
 import com.zoyo.auth.entity.Role;
@@ -67,6 +69,7 @@ public class RoleController {
      */
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('system:role:create')")
+    @Log(module = "角色管理", businessType = OperationType.INSERT, description = "创建角色")
     public Result<Role> createRole(@RequestBody RoleDTO roleDTO) {
         log.info("创建角色: {}", roleDTO);
         Role role = roleService.createRole(roleDTO);
@@ -78,6 +81,7 @@ public class RoleController {
      */
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAuthority('system:role:update')")
+    @Log(module = "角色管理", businessType = OperationType.UPDATE, description = "更新角色信息")
     public Result<Role> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
         log.info("更新角色: id={}, roleDTO={}", id, roleDTO);
         Role role = roleService.updateRole(id, roleDTO);
@@ -89,6 +93,7 @@ public class RoleController {
      */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('system:role:delete')")
+    @Log(module = "角色管理", businessType = OperationType.DELETE, description = "删除角色")
     public Result<Void> deleteRole(@PathVariable Long id) {
         log.info("删除角色: id={}", id);
         roleService.deleteRole(id);
@@ -100,6 +105,7 @@ public class RoleController {
      */
     @DeleteMapping("/batch-delete")
     @PreAuthorize("hasAuthority('system:role:delete')")
+    @Log(module = "角色管理", businessType = OperationType.DELETE, description = "批量删除角色")
     public Result<Void> batchDeleteRoles(@RequestBody List<Long> ids) {
         log.info("批量删除角色: ids={}", ids);
         roleService.batchDeleteRoles(ids);
@@ -111,6 +117,7 @@ public class RoleController {
      */
     @PutMapping("/status/{id}")
     @PreAuthorize("hasAuthority('system:role:update')")
+    @Log(module = "角色管理", businessType = OperationType.UPDATE, description = "更新角色状态")
     public Result<Void> updateRoleStatus(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
         log.info("更新角色状态: id={}, status={}", id, roleDTO.getStatus());
         roleService.updateRoleStatus(id, roleDTO.getStatus());
@@ -133,6 +140,7 @@ public class RoleController {
      */
     @PostMapping("/{id}/permissions")
     @PreAuthorize("hasAuthority('system:role:permission')")
+    @Log(module = "角色管理", businessType = OperationType.GRANT, description = "分配角色权限")
     public Result<Void> assignPermissions(@PathVariable Long id, @RequestBody List<Long> permissionIds) {
         log.info("分配角色权限: id={}, permissionIds={}", id, permissionIds);
         roleService.assignPermissions(id, permissionIds);

@@ -1,5 +1,7 @@
 package com.zoyo.auth.controller;
 
+import com.zoyo.auth.annotation.Log;
+import com.zoyo.auth.common.OperationType;
 import com.zoyo.auth.common.Result;
 import com.zoyo.auth.dto.UpdatePasswordRequest;
 import com.zoyo.auth.dto.UserDTO;
@@ -27,7 +29,6 @@ public class UserController {
      */
     @GetMapping("/current")
     public Result<UserDTO> getCurrentUser() {
-        log.info("获取当前用户信息");
         UserDTO userDTO = userService.getCurrentUser();
         return Result.success(userDTO);
     }
@@ -37,7 +38,6 @@ public class UserController {
      */
     @GetMapping("/{id}")
     public Result<UserDTO> getUserById(@PathVariable Long id) {
-        log.info("获取用户信息: {}", id);
         UserDTO userDTO = userService.getUserById(id);
         return Result.success(userDTO);
     }
@@ -46,8 +46,8 @@ public class UserController {
      * 更新用户信息
      */
     @PutMapping("/update")
+    @Log(module = "个人中心", businessType = OperationType.UPDATE, description = "更新个人信息")
     public Result<UserDTO> updateUser(@RequestBody UserDTO userDTO) {
-        log.info("更新用户信息");
         UserDTO updated = userService.updateUser(userDTO);
         return Result.success("更新成功", updated);
     }
@@ -56,8 +56,8 @@ public class UserController {
      * 修改密码
      */
     @PostMapping("/password")
+    @Log(module = "个人中心", businessType = OperationType.UPDATE, description = "修改密码")
     public Result<Void> updatePassword(@Valid @RequestBody UpdatePasswordRequest request) {
-        log.info("修改密码");
         userService.updatePassword(request);
         return Result.success("密码修改成功", null);
     }
@@ -67,8 +67,8 @@ public class UserController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
+    @Log(module = "用户管理", businessType = OperationType.DELETE, description = "删除用户")
     public Result<Void> deleteUser(@PathVariable Long id) {
-        log.info("删除用户: {}", id);
         userService.deleteUser(id);
         return Result.success("删除成功", null);
     }

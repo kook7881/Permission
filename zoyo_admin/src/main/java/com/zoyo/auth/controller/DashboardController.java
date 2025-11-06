@@ -25,7 +25,6 @@ public class DashboardController {
      */
     @GetMapping("/stats")
     public Result<DashboardStatsDTO> getDashboardStats() {
-        log.info("获取监控大屏统计数据");
         DashboardStatsDTO stats = dashboardService.getDashboardStats();
         return Result.success(stats);
     }

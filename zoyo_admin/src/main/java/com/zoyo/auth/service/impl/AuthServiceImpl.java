@@ -43,8 +43,6 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void register(RegisterRequest request) {
-        log.info("用户注册: {}", request.getUsername());
-        
         // 检查用户名是否已存在
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new BusinessException(ResultCode.USERNAME_EXISTS);
@@ -80,8 +78,6 @@ public class AuthServiceImpl implements IAuthService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public LoginResponse login(LoginRequest request, HttpServletRequest httpRequest) {
-        log.info("用户登录: {}", request.getUsername());
-        
         try {
             // 执行认证
             Authentication authentication = authenticationManager.authenticate(

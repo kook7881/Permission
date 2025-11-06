@@ -79,6 +79,15 @@ const routes: RouteRecordRaw[] = [
           requiresAuth: true
           // permission: 'system:loginlog' // 暂时移除权限检查
         }
+      },
+      {
+        path: 'system/operation-log',
+        name: 'OperationLogManagement',
+        component: () => import('@/views/system/OperationLogManagement.vue'),
+        meta: { 
+          requiresAuth: true
+          // permission: 'system:operlog' // 暂时移除权限检查
+        }
       }
     ]
   }

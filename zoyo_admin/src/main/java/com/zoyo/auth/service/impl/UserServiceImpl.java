@@ -30,8 +30,6 @@ public class UserServiceImpl implements IUserService {
     @Override
     public UserDTO getCurrentUser() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        log.debug("获取当前用户信息: {}", username);
-        
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException(ResultCode.USER_NOT_FOUND.getMessage()));
         
@@ -43,8 +41,6 @@ public class UserServiceImpl implements IUserService {
      */
     @Override
     public UserDTO getUserById(Long id) {
-        log.debug("获取用户信息: {}", id);
-        
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException(ResultCode.USER_NOT_FOUND.getMessage()));
         
@@ -71,8 +67,6 @@ public class UserServiceImpl implements IUserService {
         // 更新密码
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
-        
-        log.info("用户密码修改成功: {}", username);
     }
     
     /**
@@ -99,8 +93,6 @@ public class UserServiceImpl implements IUserService {
         }
         
         user = userRepository.save(user);
-        log.info("用户信息更新成功: {}", username);
-        
         return convertToDTO(user);
     }
     
@@ -118,8 +110,6 @@ public class UserServiceImpl implements IUserService {
         user.setEnabled(false);
         user.setStatus(0);
         userRepository.save(user);
-        
-        log.info("用户删除成功: {}", id);
     }
     
     /**

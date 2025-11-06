@@ -1,5 +1,7 @@
 package com.zoyo.auth.controller;
 
+import com.zoyo.auth.annotation.Log;
+import com.zoyo.auth.common.OperationType;
 import com.zoyo.auth.common.Result;
 import com.zoyo.auth.dto.DepartmentDTO;
 import com.zoyo.auth.dto.DepartmentTreeVO;
@@ -30,7 +32,6 @@ public class DepartmentController {
     @GetMapping("/tree")
     @PreAuthorize("hasAnyAuthority('system:dept:query', 'system:dept', 'system:user', 'system:user:view', 'system:role', 'system:role:view')")
     public Result<List<DepartmentTreeVO>> getDepartmentTree() {
-        log.info("获取部门树");
         List<DepartmentTreeVO> tree = departmentService.getDepartmentTree();
         return Result.success(tree);
     }
@@ -41,7 +42,6 @@ public class DepartmentController {
     @GetMapping
     @PreAuthorize("hasAuthority('system:dept:query')")
     public Result<List<DepartmentDTO>> getAllDepartments() {
-        log.info("获取所有部门列表");
         List<DepartmentDTO> departments = departmentService.getAllDepartments();
         return Result.success(departments);
     }
@@ -52,7 +52,6 @@ public class DepartmentController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('system:dept:query')")
     public Result<DepartmentDTO> getDepartmentById(@PathVariable Long id) {
-        log.info("获取部门: {}", id);
         DepartmentDTO department = departmentService.getDepartmentById(id);
         return Result.success(department);
     }
@@ -62,8 +61,8 @@ public class DepartmentController {
      */
     @PostMapping
     @PreAuthorize("hasAuthority('system:dept:create')")
+    @Log(module = "部门管理", businessType = OperationType.INSERT, description = "创建部门")
     public Result<DepartmentDTO> createDepartment(@Valid @RequestBody DepartmentDTO departmentDTO) {
-        log.info("创建部门: {}", departmentDTO.getName());
         DepartmentDTO department = departmentService.createDepartment(departmentDTO);
         return Result.success(department);
     }
@@ -73,10 +72,10 @@ public class DepartmentController {
      */
     @PutMapping("/{id}")
     @PreAuthorize("hasAuthority('system:dept:update')")
+    @Log(module = "部门管理", businessType = OperationType.UPDATE, description = "更新部门信息")
     public Result<DepartmentDTO> updateDepartment(
             @PathVariable Long id,
             @Valid @RequestBody DepartmentDTO departmentDTO) {
-        log.info("更新部门: {}", id);
         departmentDTO.setId(id);
         DepartmentDTO department = departmentService.updateDepartment(departmentDTO);
         return Result.success(department);
@@ -87,8 +86,8 @@ public class DepartmentController {
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('system:dept:delete')")
+    @Log(module = "部门管理", businessType = OperationType.DELETE, description = "删除部门")
     public Result<Void> deleteDepartment(@PathVariable Long id) {
-        log.info("删除部门: {}", id);
         departmentService.deleteDepartment(id);
         return Result.success();
     }
@@ -99,7 +98,6 @@ public class DepartmentController {
     @GetMapping("/{parentId}/children")
     @PreAuthorize("hasAuthority('system:dept:query')")
     public Result<List<DepartmentDTO>> getChildDepartments(@PathVariable Long parentId) {
-        log.info("获取子部门列表: {}", parentId);
         List<DepartmentDTO> departments = departmentService.getChildDepartments(parentId);
         return Result.success(departments);
     }

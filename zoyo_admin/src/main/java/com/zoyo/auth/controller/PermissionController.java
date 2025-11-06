@@ -1,5 +1,7 @@
 package com.zoyo.auth.controller;
 
+import com.zoyo.auth.annotation.Log;
+import com.zoyo.auth.common.OperationType;
 import com.zoyo.auth.common.Result;
 import com.zoyo.auth.dto.PermissionDTO;
 import com.zoyo.auth.entity.Permission;
@@ -31,7 +33,6 @@ public class PermissionController {
     @GetMapping("/tree")
     @PreAuthorize("hasAnyAuthority('system:permission:query', 'system:role:query')")
     public Result<List<PermissionDTO>> getPermissionTree() {
-        log.info("获取权限树");
         List<PermissionDTO> tree = permissionService.getPermissionTree();
         return Result.success(tree);
     }
@@ -42,7 +43,6 @@ public class PermissionController {
     @GetMapping("/list")
     @PreAuthorize("hasAuthority('system:permission:query')")
     public Result<List<Permission>> getPermissionList() {
-        log.info("获取权限列表");
         List<Permission> permissions = permissionService.getPermissionList();
         return Result.success(permissions);
     }
@@ -53,7 +53,6 @@ public class PermissionController {
     @GetMapping("/{id}")
     @PreAuthorize("hasAuthority('system:permission:query')")
     public Result<Permission> getPermissionById(@PathVariable Long id) {
-        log.info("获取权限详情: id={}", id);
         Permission permission = permissionService.getPermissionById(id);
         return Result.success(permission);
     }
@@ -63,8 +62,8 @@ public class PermissionController {
      */
     @PostMapping("/create")
     @PreAuthorize("hasAuthority('system:permission:create')")
+    @Log(module = "权限管理", businessType = OperationType.INSERT, description = "创建权限")
     public Result<Permission> createPermission(@RequestBody PermissionDTO permissionDTO) {
-        log.info("创建权限: {}", permissionDTO);
         Permission permission = permissionService.createPermission(permissionDTO);
         return Result.success(permission);
     }
@@ -74,8 +73,8 @@ public class PermissionController {
      */
     @PutMapping("/update/{id}")
     @PreAuthorize("hasAuthority('system:permission:update')")
+    @Log(module = "权限管理", businessType = OperationType.UPDATE, description = "更新权限信息")
     public Result<Permission> updatePermission(@PathVariable Long id, @RequestBody PermissionDTO permissionDTO) {
-        log.info("更新权限: id={}, permissionDTO={}", id, permissionDTO);
         Permission permission = permissionService.updatePermission(id, permissionDTO);
         return Result.success(permission);
     }
@@ -85,8 +84,8 @@ public class PermissionController {
      */
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasAuthority('system:permission:delete')")
+    @Log(module = "权限管理", businessType = OperationType.DELETE, description = "删除权限")
     public Result<Void> deletePermission(@PathVariable Long id) {
-        log.info("删除权限: id={}", id);
         permissionService.deletePermission(id);
         return Result.success();
     }
@@ -97,7 +96,6 @@ public class PermissionController {
     @GetMapping("/user-permissions")
     public Result<List<String>> getUserPermissions(HttpServletRequest request) {
         Long userId = getUserIdFromRequest(request);
-        log.info("获取用户权限: userId={}", userId);
         List<String> permissions = permissionService.getUserPermissionCodes(userId);
         return Result.success(permissions);
     }
@@ -108,7 +106,6 @@ public class PermissionController {
     @GetMapping("/user-menus")
     public Result<List<PermissionDTO>> getUserMenus(HttpServletRequest request) {
         Long userId = getUserIdFromRequest(request);
-        log.info("获取用户菜单: userId={}", userId);
         List<PermissionDTO> menus = permissionService.getUserMenuTree(userId);
         return Result.success(menus);
     }

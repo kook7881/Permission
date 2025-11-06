@@ -1,14 +1,38 @@
 -- ============================================
--- Zoyo 认证系统 - 初始化数据
+-- Zoyo 认证系统 - 完整数据库初始化脚本
 -- ============================================
--- 数据库: zoyo_auth
--- 说明: 包含超级管理员账号和菜单权限数据
+-- 数据库: zoyo
+-- 字符集: utf8mb4
+-- 排序规则: utf8mb4_unicode_ci
+-- 
+-- 说明: 
+--   1. 创建数据库
+--   2. 初始化超级管理员账号
+--   3. 初始化基础菜单权限
+-- 
+-- 使用方法:
+--   mysql -uroot -p < setup-database.sql
 -- ============================================
 
-USE `zoyo_auth`;
+-- ============================================
+-- 第一部分：创建数据库
+-- ============================================
+
+-- 创建数据库（如果不存在）
+CREATE DATABASE IF NOT EXISTS `zoyo` 
+DEFAULT CHARACTER SET utf8mb4 
+COLLATE utf8mb4_unicode_ci;
+
+USE `zoyo`;
 
 -- ============================================
--- 1. 创建超级管理员账号
+-- 说明：大部分表由JPA自动创建
+-- 需要先启动Spring Boot应用让JPA创建表结构
+-- 然后再执行本脚本的数据初始化部分
+-- ============================================
+
+-- ============================================
+-- 第二部分：初始化超级管理员账号
 -- ============================================
 -- 用户名: admin
 -- 密码: admin123
@@ -81,11 +105,8 @@ ON DUPLICATE KEY UPDATE
     remark = '系统初始化创建的超级管理员账号';
 
 -- ============================================
--- 2. 初始化菜单数据
+-- 第三部分：初始化菜单数据
 -- ============================================
--- 清空现有菜单数据（可选，如果需要重新初始化请取消注释）
--- DELETE FROM sys_permission WHERE permission_type = 1;
--- DELETE FROM sys_role_permission WHERE permission_id IN (SELECT id FROM sys_permission WHERE permission_type = 1);
 
 -- 插入一级菜单
 INSERT INTO sys_permission (parent_id, permission_name, permission_code, permission_type, route_path, component_path, icon, sort_order, visible, status, remark, create_time, update_time) VALUES
@@ -110,7 +131,7 @@ ON DUPLICATE KEY UPDATE
     update_time = NOW();
 
 -- ============================================
--- 3. 为admin角色分配所有菜单权限
+-- 第四部分：为admin角色分配所有菜单权限
 -- ============================================
 -- 假设admin的角色ID为1，如果不是请修改
 INSERT INTO sys_role_permission (role_id, permission_id)
@@ -118,7 +139,7 @@ SELECT 1, id FROM sys_permission WHERE permission_type = 1 AND status = 1
 ON DUPLICATE KEY UPDATE role_id = role_id;
 
 -- ============================================
--- 4. 验证初始化结果
+-- 验证初始化结果
 -- ============================================
 
 -- 验证超级管理员账号
@@ -160,15 +181,15 @@ ORDER BY
     p1.sort_order;
 
 -- 显示登录信息
-SELECT 
-    '' AS '',
-    '📋 登录信息' AS '';
-
-SELECT 
-    'admin' AS '用户名',
-    'admin123' AS '密码',
-    'http://localhost:3000' AS '登录地址';
-
-SELECT 
-    '' AS '',
-    '⚠️  重要提示：首次登录后请立即修改密码！' AS '';
+SELECT '' AS '';
+SELECT '========================================' AS '';
+SELECT '🎉 数据库初始化完成！' AS '';
+SELECT '========================================' AS '';
+SELECT '' AS '';
+SELECT '📋 登录信息' AS '';
+SELECT '  用户名: admin' AS '';
+SELECT '  密码: admin123' AS '';
+SELECT '  地址: http://localhost:3000' AS '';
+SELECT '' AS '';
+SELECT '⚠️  重要提示：首次登录后请立即修改密码！' AS '';
+SELECT '========================================' AS '';

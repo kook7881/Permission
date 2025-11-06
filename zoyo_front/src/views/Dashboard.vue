@@ -305,8 +305,6 @@ const updateTime = () => {
 const loadDashboardData = async () => {
   try {
     const res = await getDashboardStats()
-    console.log('Dashboard API 返回数据:', res)
-    
     if (res && res.data) {
       dashboardData.value = res.data
       
@@ -551,7 +549,6 @@ const initMapChart = () => {
       const chinaJson = await response.json()
       echarts.registerMap('china', chinaJson)
       mapChartInstance?.setOption(option)
-      console.log('中国地图加载成功！')
     } catch (error) {
       console.error('加载地图数据失败:', error)
     }

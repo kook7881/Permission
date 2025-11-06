@@ -569,6 +569,14 @@ npm run build
 - [ ] 日志收集（ELK）
 - [ ] 服务监控（Prometheus）
 
+## 📚 文档导航
+
+- **[项目结构说明](./PROJECT_STRUCTURE.md)** - 完整的目录结构和文件说明
+- **[API文档](./API文档.md)** - 完整的后端API接口文档
+- **[数据库文档](./database/README.md)** - 数据库初始化和迁移说明
+- **[前端文档](./zoyo_front/README.md)** - 前端项目说明
+- **[历史文档](./docs/README.md)** - 开发过程中的修复说明和总结归档
+
 ## 📄 许可证
 
 MIT License

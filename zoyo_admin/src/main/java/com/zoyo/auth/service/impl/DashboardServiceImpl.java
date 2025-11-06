@@ -237,19 +237,12 @@ public class DashboardServiceImpl implements IDashboardService {
                         );
                         boolean isLastLogin = secondsDiff < 5;
                         
-                        log.debug("用户 {} 登录记录时间比较: loginLog={}, lastLogin={}, diff={}秒, isLast={}", 
-                            loginLog.getUsername(), loginLog.getLoginTime(), user.getLastLoginTime(), secondsDiff, isLastLogin);
-                        
                         // 只有最后一次登录才判断在线状态
                         if (isLastLogin) {
                             boolean loginRecent = user.getLastLoginTime().isAfter(thirtyMinutesAgo);
                             boolean hasLoggedOut = user.getLastLogoutTime() != null 
                                 && user.getLastLogoutTime().isAfter(user.getLastLoginTime());
                             onlineStatus = loginRecent && !hasLoggedOut;
-                            
-                            log.info("用户 {} 在线状态判断: loginTime={}, thirtyMinutesAgo={}, loginRecent={}, lastLogoutTime={}, hasLoggedOut={}, onlineStatus={}", 
-                                loginLog.getUsername(), user.getLastLoginTime(), thirtyMinutesAgo, loginRecent, 
-                                user.getLastLogoutTime(), hasLoggedOut, onlineStatus);
                         }
                     }
                 }

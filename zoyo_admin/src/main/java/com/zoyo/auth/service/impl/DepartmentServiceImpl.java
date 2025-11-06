@@ -33,8 +33,6 @@ public class DepartmentServiceImpl implements IDepartmentService {
      */
     @Override
     public List<DepartmentTreeVO> getDepartmentTree() {
-        log.debug("获取部门树");
-        
         List<Department> allDepartments = departmentRepository.findByDeletedFalseOrderBySortAsc();
         return buildDepartmentTree(allDepartments, 0L);
     }
@@ -44,8 +42,6 @@ public class DepartmentServiceImpl implements IDepartmentService {
      */
     @Override
     public List<DepartmentDTO> getAllDepartments() {
-        log.debug("获取所有部门列表");
-        
         List<Department> departments = departmentRepository.findByDeletedFalseOrderBySortAsc();
         return departments.stream()
                 .map(this::convertToDTO)
@@ -57,8 +53,6 @@ public class DepartmentServiceImpl implements IDepartmentService {
      */
     @Override
     public DepartmentDTO getDepartmentById(Long id) {
-        log.debug("获取部门: {}", id);
-        
         Department department = departmentRepository.findByIdAndDeletedFalse(id)
                 .orElseThrow(() -> new RuntimeException("部门不存在"));
         
@@ -98,8 +92,6 @@ public class DepartmentServiceImpl implements IDepartmentService {
         
         // 保存部门
         department = departmentRepository.save(department);
-        
-        log.info("部门创建成功: {}", department.getName());
         return convertToDTO(department);
     }
     
@@ -163,8 +155,6 @@ public class DepartmentServiceImpl implements IDepartmentService {
         
         // 保存部门
         department = departmentRepository.save(department);
-        
-        log.info("部门更新成功: {}", department.getName());
         return convertToDTO(department);
     }
     
@@ -193,8 +183,6 @@ public class DepartmentServiceImpl implements IDepartmentService {
         department.setDeleted(true);
         department.setUpdateBy(getCurrentUserId());
         departmentRepository.save(department);
-        
-        log.info("部门删除成功: {}", id);
     }
     
     /**
@@ -202,8 +190,6 @@ public class DepartmentServiceImpl implements IDepartmentService {
      */
     @Override
     public List<DepartmentDTO> getChildDepartments(Long parentId) {
-        log.debug("获取子部门列表: {}", parentId);
-        
         List<Department> departments = departmentRepository.findByParentIdAndDeletedFalseOrderBySortAsc(parentId);
         return departments.stream()
                 .map(this::convertToDTO)
